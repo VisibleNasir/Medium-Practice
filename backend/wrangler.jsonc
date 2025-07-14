@@ -7,12 +7,15 @@
   //   "nodejs_compat"
   // ],
   "vars": {
-  
+    "DATABASE_URL": "",
+    "JWT_SECRET":""
   },
+  
   // "kv_namespaces": [
   //   {
   //     "binding": "MY_KV_NAMESPACE",
-  //     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  //     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  // xxxx"
   //   }
   // ],
   // "r2_buckets": [

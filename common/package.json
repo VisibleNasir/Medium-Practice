@@ -1,0 +1,14 @@
+{
+  "name": "@nasirnadaf/medium-common",
+  "version": "1.0.2",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": ["zod", "input", "common", "schema"],
+  "author": "Nasir Nadaf",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.21.4"
+  }
+}

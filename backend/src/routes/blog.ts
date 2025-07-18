@@ -13,27 +13,24 @@ export const blogRouter = new Hono<{
     userId:string
   }
 }>();
-
 blogRouter.use("/*", async (c, next) => {
   const authHeader = c.req.header("authorization") || "";
-  try{
+
+  try {
     const user = await verify(authHeader, c.env.JWT_SECRET);
-    if (user && typeof user === "object" && typeof (user as any).id === "string") {
-      c.set("userId", (user as any).id);
+    if (user && typeof user === "object" && (typeof (user as any).id === "string" || typeof (user as any).id === "number")) {
+      c.set("userId", String((user as any).id));
       await next();
     } else {
       c.status(403);
-      return c.json({
-        message: "You are not logged in"
-      });  
+      return c.json({ message: "You are not logged in" });
     }
-  }catch(e){
+  } catch (e) {
     c.status(403);
-    return c.json({
-      message: "Invalid token"
-    });
+    return c.json({ message: "Invalid token" });
   }
 });
+
 
 blogRouter.post("/", async (c) => {
   const body = await c.req.json();
@@ -97,7 +94,18 @@ blogRouter.get("/bulk", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
-  const blogs = await prisma.blog.findMany();
+  const blogs = await prisma.blog.findMany({
+    select:{
+      content:true,
+      title:true,
+      id:true,
+      author:{
+        select:{
+          name: true
+        }
+      }
+    }
+  });
 
   return c.json({
     blogs,
@@ -105,7 +113,7 @@ blogRouter.get("/bulk", async (c) => {
 });
 
 blogRouter.get("/:id", async (c) => {
-  const id = await c.req.param();
+  const id = c.req.param("id");
 
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
